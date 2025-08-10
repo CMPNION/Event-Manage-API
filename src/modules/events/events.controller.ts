@@ -1,5 +1,6 @@
-import { Controller, Delete, Get, Param } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { EventsService } from "./events.service";
+import { CreateEventDto } from "./dto/createEvent.dto";
 
 @Controller("events")
 export class EventsController {
@@ -10,7 +11,7 @@ export class EventsController {
     return await this.eventsService.getAll();
   }
 
-  @Get("/:uid")
+  @Get("/list/:uid")
   async getOne(@Param("uid") uid: string) {
     return await this.eventsService.getByUid(uid);
   }
@@ -18,5 +19,10 @@ export class EventsController {
   @Delete("/delete/:uid")
   async deleteOne(@Param("uid") uid: string) {
     return await this.eventsService.delete(uid);
+  }
+
+  @Post("/new")
+  async newEvent(@Body() eventBody: CreateEventDto) {
+    return this.eventsService.createEvent(eventBody);
   }
 }

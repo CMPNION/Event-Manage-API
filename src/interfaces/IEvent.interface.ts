@@ -5,6 +5,5 @@ export interface IEvent {
   category: number;
   date: Date;
   bannerurl: string;
-  ownerId: number;
   allowed: boolean;
 }

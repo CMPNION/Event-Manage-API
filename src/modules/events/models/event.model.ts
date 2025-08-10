@@ -1,10 +1,9 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { IEvent } from "src/interfaces/IEvent.interface";
-
-type EventCreationAttrs = Omit<IEvent, "eventUid">;
+import { CreateEventDto } from "../dto/createEvent.dto";
 
 @Table({ tableName: "events", timestamps: true })
-export class EventModel extends Model<IEvent, EventCreationAttrs> {
+export class EventModel extends Model<IEvent, CreateEventDto> {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -27,6 +26,7 @@ export class EventModel extends Model<IEvent, EventCreationAttrs> {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
+    defaultValue: 0,
   })
   category: number;
 
@@ -43,15 +43,9 @@ export class EventModel extends Model<IEvent, EventCreationAttrs> {
   bannerurl: string;
 
   @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  ownerId: number;
-
-  @Column({
     type: DataType.BOOLEAN,
-    defaultValue: false,
     allowNull: false,
+    defaultValue: false,
   })
   allowed: boolean;
 }
