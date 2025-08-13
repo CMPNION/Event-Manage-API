@@ -6,6 +6,7 @@ import { CacheService } from "../cache/cache.service";
 import { IEvent } from "src/interfaces/IEvent.interface";
 import { UpdateEventDto } from "./dto/updateEvent.dto";
 import { CreateEventDto } from "./dto/createEvent.dto";
+import { where } from "sequelize";
 
 @Injectable()
 export class EventsService {
@@ -35,7 +36,7 @@ export class EventsService {
 
     if (!data) {
       data = await this.eventModel.findByPk(uid, { raw: true });
-      this.cacheService.save(cacheKey, data);
+      await this.cacheService.save(cacheKey, data);
     }
     return data;
   }
@@ -70,5 +71,21 @@ export class EventsService {
     await this.cacheService.clear();
 
     return event;
+  }
+
+  async allowEvent(uid: string): Promise<IEvent> {
+    const [_, [updatedEvent]] = await this.eventModel.update(
+      { allowed: true },
+      {
+        where: { eventUid: uid },
+        returning: true,
+      }
+    );
+
+    if (!updatedEvent) {
+      throw new Error(`Event with uid=${uid} not found`);
+    }
+
+    return updatedEvent;
   }
 }

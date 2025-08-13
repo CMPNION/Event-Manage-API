@@ -1,7 +1,9 @@
 import { IUserRole } from "./IUserRole.interface";
 
 export interface IUserPayload {
-    id: number;
-    token: string;
-    roles: IUserRole[];
+  id: number;
+  barcode: string;
+  name: string;
+  surname: string;
+  imageId: string;
 }

@@ -16,13 +16,13 @@ export class EventsController {
     return await this.eventsService.getByUid(uid);
   }
 
-  @Delete("/delete/:uid")
-  async deleteOne(@Param("uid") uid: string) {
-    return await this.eventsService.delete(uid);
-  }
+  //   @Delete("/delete/:uid")
+  //   async deleteOne(@Param("uid") uid: string) {
+  //     return await this.eventsService.delete(uid);
+  //   }
 
-  @Post("/new")
-  async newEvent(@Body() eventBody: CreateEventDto) {
-    return this.eventsService.createEvent(eventBody);
-  }
+  //   @Post("/new")
+  //   async newEvent(@Body() eventBody: CreateEventDto) {
+  //     return this.eventsService.createEvent(eventBody);
+  //   }
 }
