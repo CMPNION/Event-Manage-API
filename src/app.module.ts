@@ -4,6 +4,7 @@ import { DatabaseModule } from "./modules/database/database.module";
 import { LocalesModule } from "./modules/locales/locales.module";
 import { CacheModule } from "./modules/cache/cache.module";
 import { EventsModule } from "./modules/events/events.module";
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { EventsModule } from "./modules/events/events.module";
     LocalesModule,
     CacheModule,
     EventsModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],
