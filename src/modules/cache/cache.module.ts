@@ -5,15 +5,15 @@ import { CacheService } from "./cache.service";
 
 @Global()
 @Module({
-  imports: [
-    Cache.registerAsync({
-      isGlobal: true,
-      useFactory: () => ({
-        stores: [createKeyv(process.env.REDIS_URL)],
-      }),
-    }),
-  ],
-  providers: [CacheService],
-  exports: [CacheService],
+    imports: [
+        Cache.registerAsync({
+            isGlobal: true,
+            useFactory: () => ({
+                stores: [createKeyv(process.env.REDIS_URL)],
+            }),
+        }),
+    ],
+    providers: [CacheService],
+    exports: [CacheService],
 })
 export class CacheModule {}

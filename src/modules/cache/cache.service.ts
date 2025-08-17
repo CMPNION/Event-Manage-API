@@ -4,27 +4,31 @@ import { Cache } from "cache-manager";
 
 @Injectable()
 export class CacheService {
-  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+    constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  async get<T = any>(key: string): Promise<T | null> {
-    const value = await this.cacheManager.get(key);
-    return value ? (value as T) : null;
-  }
-
-  async save(key: string, data: any, ttlInSeconds?: number): Promise<boolean> {
-    if (ttlInSeconds) {
-      await this.cacheManager.set(key, data, ttlInSeconds * 1000);
-    } else {
-      await this.cacheManager.set(key, data);
+    async get<T = any>(key: string): Promise<T | null> {
+        const value = await this.cacheManager.get(key);
+        return value ? (value as T) : null;
     }
-    return true;
-  }
 
-  async delete(key: string): Promise<void> {
-    await this.cacheManager.del(key);
-  }
+    async save(
+        key: string,
+        data: any,
+        ttlInSeconds?: number,
+    ): Promise<boolean> {
+        if (ttlInSeconds) {
+            await this.cacheManager.set(key, data, ttlInSeconds * 1000);
+        } else {
+            await this.cacheManager.set(key, data);
+        }
+        return true;
+    }
 
-  async clear(): Promise<void> {
-    await this.cacheManager.clear();
-  }
+    async delete(key: string): Promise<void> {
+        await this.cacheManager.del(key);
+    }
+
+    async clear(): Promise<void> {
+        await this.cacheManager.clear();
+    }
 }
