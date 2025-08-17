@@ -1,5 +1,7 @@
-export interface IUserRole {
-    value: string;
-    description: string;
-    code: string;
+interface IUserRole {
+  id: number;
+  key: string;
+  name: string;
 }
+
+export { IUserRole };

@@ -1,9 +1,10 @@
 export interface IEvent {
-  eventUid: string;
+  eventUid?: string;
   name: string;
   description: string;
-  category: number;
+  category?: number;
   date: Date;
   bannerurl: string;
-  allowed: boolean;
+  ownerId: number;
+  allowed?: boolean;
 }
