@@ -1,5 +1,9 @@
 // src/modules/events/events.service.ts
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { EventModel } from "./models/event.model";
 import { CacheService } from "../cache/cache.service";
@@ -41,32 +45,51 @@ export class EventsService {
     return data;
   }
 
-  async delete(uid: string): Promise<number> {
-    const deletedCount = await this.eventModel.destroy({
-      where: { eventUid: uid },
-    });
-    await this.cacheService.clear();
-    return deletedCount;
+  async delete(
+    uid: string,
+    userId: number
+  ): Promise<boolean | UnauthorizedException> {
+    const deleted = await this.eventModel.findByPk(uid);
+    if (deleted?.ownerId == userId) {
+      deleted?.destroy;
+      await this.cacheService.clear();
+      return true;
+    }
+    return new UnauthorizedException(
+      "You have no perrmission to delete this event"
+    );
   }
 
   async updateEvent(
     uid: string,
-    eventBody: UpdateEventDto
-  ): Promise<IEvent | NotFoundException> {
+    eventBody: UpdateEventDto,
+    userid: number
+  ): Promise<IEvent | NotFoundException | UnauthorizedException> {
     const event = await this.eventModel.findByPk(uid);
 
     if (!event) {
       return new NotFoundException(`Event with uid:${uid} not found`);
     }
 
-    await event.update(eventBody);
-    await this.cacheService.clear();
-
-    return event;
+    if (event.ownerId == userid) {
+      await event.update(eventBody);
+      await this.cacheService.clear();
+      return event;
+    } else {
+      return new UnauthorizedException(
+        "You have no perrmission to edit this event"
+      );
+    }
   }
 
-  async createEvent(eventBody: CreateEventDto): Promise<IEvent> {
-    const event = await this.eventModel.create(eventBody);
+  async createEvent(
+    eventBody: CreateEventDto,
+    userid: number
+  ): Promise<IEvent> {
+    const event = await this.eventModel.create({
+      ...eventBody,
+      ownerId: userid,
+    });
 
     await this.cacheService.clear();
 

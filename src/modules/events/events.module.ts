@@ -5,8 +5,8 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { EventModel } from "./models/event.model";
 
 @Module({
-  imports: [SequelizeModule.forFeature([EventModel])],
-  controllers: [EventsController],
-  providers: [EventsService],
+    imports: [SequelizeModule.forFeature([EventModel])],
+    controllers: [EventsController],
+    providers: [EventsService],
 })
 export class EventsModule {}
