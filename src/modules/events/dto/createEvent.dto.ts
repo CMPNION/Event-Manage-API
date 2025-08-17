@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsUrl } from "class-validator";
+import { IsString, IsDateString, IsUrl, IsOptional } from "class-validator";
 
 export class CreateEventDto {
   @IsString()
@@ -12,4 +12,7 @@ export class CreateEventDto {
 
   @IsUrl()
   bannerurl: string;
+
+  @IsOptional()
+  ownerId: number;
 }
