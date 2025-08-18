@@ -10,13 +10,14 @@ import { CacheService } from "../cache/cache.service";
 import { IEvent } from "src/interfaces/IEvent.interface";
 import { UpdateEventDto } from "./dto/updateEvent.dto";
 import { CreateEventDto } from "./dto/createEvent.dto";
-import { where } from "sequelize";
+import { NotificationService } from "../notification/notification.service";
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectModel(EventModel) private eventModel: typeof EventModel,
-    private readonly cacheService: CacheService
+    private readonly cacheService: CacheService,
+    private readonly notificationService: NotificationService
   ) {}
 
   async getAll(): Promise<IEvent[]> {
@@ -96,6 +97,10 @@ export class EventsService {
     return event;
   }
 
+  async getPendingEvents() {
+    return this.eventModel.findAll({ where: { allowed: false } });
+  }
+
   async allowEvent(uid: string): Promise<IEvent> {
     const [_, [updatedEvent]] = await this.eventModel.update(
       { allowed: true },
@@ -104,6 +109,10 @@ export class EventsService {
         returning: true,
       }
     );
+
+    const delay = updatedEvent.date.getTime() - Date.now() + 3 * 60 * 60 * 1000;
+
+    this.notificationService.addNoticeQueue(updatedEvent.name, delay);
 
     if (!updatedEvent) {
       throw new Error(`Event with uid=${uid} not found`);

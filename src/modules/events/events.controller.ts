@@ -12,8 +12,8 @@ import { EventsService } from "./events.service";
 import { CreateEventDto } from "./dto/createEvent.dto";
 import { JwtAuthGuard } from "src/infrastructure/guards/jwt-auth.guard";
 import { Roles } from "../../infrastructure/decorators/auth.decorator";
-import { RolesGuard } from "src/infrastructure/guards/roles.guard";
-import { User } from "src/infrastructure/decorators/user.decorator";
+import { RolesGuard } from "../../infrastructure/guards/roles.guard";
+import { User } from "../../infrastructure/decorators/user.decorator";
 import { UpdateEventDto } from "./dto/updateEvent.dto";
 
 @Controller("events")
