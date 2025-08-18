@@ -5,19 +5,21 @@ import { LocalesModule } from "./modules/locales/locales.module";
 import { CacheModule } from "./modules/cache/cache.module";
 import { EventsModule } from "./modules/events/events.module";
 import { AdminModule } from "./modules/admin/admin.module";
-import { QueueModule } from './modules/queue/queue.module';
+import { QueueModule } from "./modules/queue/queue.module";
+import { NotificationModule } from "./modules/notification/notification.module";
 
 @Module({
-    imports: [
-        ConfigHostModule,
-        DatabaseModule,
-        LocalesModule,
-        CacheModule,
-        EventsModule,
-        AdminModule,
-        QueueModule,
-    ],
-    controllers: [],
-    providers: [],
+  imports: [
+    ConfigHostModule,
+    DatabaseModule,
+    QueueModule,
+    LocalesModule,
+    CacheModule,
+    EventsModule,
+    AdminModule,
+    NotificationModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
