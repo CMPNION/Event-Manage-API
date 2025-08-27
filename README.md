@@ -1,6 +1,6 @@
 ## Intro
-This project is easy-scalable event-manage API. It allows you a simply managing of your events with: Roles, Authorisations. 
 
+This project is easy-scalable event-manage API. It allows you a simply managing of your events with: Roles, Authorisations.
 
 ## License
 

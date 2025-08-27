@@ -1,10 +1,13 @@
-name: Prettier Check
+name: Prettier and Linting
 
 on:
     push:
         branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
+
   prettier:
     runs-on: ubuntu-latest
     steps:
@@ -21,4 +24,7 @@ jobs:
 
       - name: Run Prettier
         run: npx prettier --write '**/*.{js,ts,json,md}'
+
+      - name: Run Linting
+        run: npm run lint
 
