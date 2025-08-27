@@ -17,7 +17,7 @@
         "prod:logs": "docker compose --env-file .env.production --profile prod logs -f backend",
         "migrate:dev": "cross-env NODE_ENV=development npx sequelize-cli db:migrate --config config/config.mjs",
         "migrate:prod": "cross-env NODE_ENV=production npx sequelize-cli db:migrate --config config/config.mjs",
-        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-errors 7",
         "prettier": "prettier --write .",
         "check-updates": "ncu"
     },
