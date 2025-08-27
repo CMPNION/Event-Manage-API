@@ -1,7 +1,7 @@
 interface IUserRole {
-  id: number;
-  key: string;
-  name: string;
+    id: number;
+    key: string;
+    name: string;
 }
 
 export { IUserRole };

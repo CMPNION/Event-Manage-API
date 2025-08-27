@@ -7,13 +7,13 @@ import { NotificationModule } from "../notification/notification.module";
 import { JwtModule } from "@nestjs/jwt";
 
 @Module({
-  imports: [
-    SequelizeModule.forFeature([EventModel]),
-    NotificationModule,
-    JwtModule,
-  ],
-  controllers: [EventsController],
-  providers: [EventsService],
-  exports: [EventsService],
+    imports: [
+        SequelizeModule.forFeature([EventModel]),
+        NotificationModule,
+        JwtModule,
+    ],
+    controllers: [EventsController],
+    providers: [EventsService],
+    exports: [EventsService],
 })
 export class EventsModule {}

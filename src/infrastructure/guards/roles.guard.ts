@@ -1,18 +1,17 @@
 import {
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
+    CanActivate,
+    ExecutionContext,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { JwtService } from "@nestjs/jwt";
 import { Reflector } from "@nestjs/core";
-import { ROLES_KEY, Roles } from "../decorators/auth.decorator";
+import { ROLES_KEY } from "../decorators/auth.decorator";
 import * as process from "process";
 import { IUserPayload } from "../../interfaces/IUserPayload.interface";
-import { IUserRole } from "../../interfaces/IUserRole.interface";
 import { IUserRequest } from "../../interfaces/IUserRequest.interface";
 
 /**
@@ -37,56 +36,59 @@ import { IUserRequest } from "../../interfaces/IUserRequest.interface";
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private reflector: Reflector) {}
+    constructor(
+        private jwtService: JwtService,
+        private reflector: Reflector,
+    ) {}
 
-  canActivate(
-    context: ExecutionContext
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    const req: IUserRequest = context.switchToHttp().getRequest();
+    canActivate(
+        context: ExecutionContext,
+    ): boolean | Promise<boolean> | Observable<boolean> {
+        const req: IUserRequest = context.switchToHttp().getRequest();
 
-    const requiredRoles: string[] = this.reflector.getAllAndOverride(
-      ROLES_KEY,
-      [context.getHandler(), context.getClass()]
-    );
+        const requiredRoles: string[] = this.reflector.getAllAndOverride(
+            ROLES_KEY,
+            [context.getHandler(), context.getClass()],
+        );
 
-    if (!requiredRoles) {
-      return true;
-    }
-
-    const authHeader: string | null = req.headers.get("authorization");
-
-    if (authHeader) {
-      const bearer = authHeader.split(" ")[0];
-      const token = authHeader.split(" ")[1];
-
-      if (bearer !== "Bearer" || !token) {
-        throw new UnauthorizedException({
-          message: "Необходима авторизация",
-        });
-      }
-
-      let user: IUserPayload;
-
-      try {
-        user = this.jwtService.verify<IUserPayload>(token, {
-          secret: process.env.JWT_SECRET,
-        });
-      } catch (err) {
-        throw new UnauthorizedException(err);
-      }
-
-      if (user) {
-        let isHaveRoles: boolean = false;
-        if (user.role) {
-          isHaveRoles = requiredRoles.includes(user.role.name);
+        if (!requiredRoles) {
+            return true;
         }
-        if (isHaveRoles) return true;
-      }
-    }
 
-    throw new HttpException(
-      "Нет прав для использования этого метода",
-      HttpStatus.FORBIDDEN
-    );
-  }
+        const authHeader: string | null = req.headers.get("authorization");
+
+        if (authHeader) {
+            const bearer = authHeader.split(" ")[0];
+            const token = authHeader.split(" ")[1];
+
+            if (bearer !== "Bearer" || !token) {
+                throw new UnauthorizedException({
+                    message: "Необходима авторизация",
+                });
+            }
+
+            let user: IUserPayload;
+
+            try {
+                user = this.jwtService.verify<IUserPayload>(token, {
+                    secret: process.env.JWT_SECRET,
+                });
+            } catch (err) {
+                throw new UnauthorizedException(err);
+            }
+
+            if (user) {
+                let isHaveRoles: boolean = false;
+                if (user.role) {
+                    isHaveRoles = requiredRoles.includes(user.role.name);
+                }
+                if (isHaveRoles) return true;
+            }
+        }
+
+        throw new HttpException(
+            "Нет прав для использования этого метода",
+            HttpStatus.FORBIDDEN,
+        );
+    }
 }

@@ -24,9 +24,9 @@ import { IUserRequest } from "../../interfaces/IUserRequest.interface";
  * }
  */
 export const User = createParamDecorator(
-  (data: keyof IUserPayload, ctx: ExecutionContext) => {
-    const request: IUserRequest = ctx.switchToHttp().getRequest();
+    (data: keyof IUserPayload, ctx: ExecutionContext) => {
+        const request: IUserRequest = ctx.switchToHttp().getRequest();
 
-    return data ? request.user[data] : request.user;
-  }
+        return data ? request.user[data] : request.user;
+    },
 );

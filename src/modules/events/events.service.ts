@@ -1,5 +1,5 @@
-// src/modules/events/events.service.ts
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -15,7 +15,7 @@ import { NotificationService } from "../notification/notification.service";
 @Injectable()
 export class EventsService {
   constructor(
-    @InjectModel(EventModel) private eventModel: typeof EventModel,
+    @InjectModel(EventModel) private readonly eventModel: typeof EventModel,
     private readonly cacheService: CacheService,
     private readonly notificationService: NotificationService
   ) {}
@@ -52,7 +52,7 @@ export class EventsService {
   ): Promise<boolean | UnauthorizedException> {
     const deleted = await this.eventModel.findByPk(uid);
     if (deleted?.ownerId == userId) {
-      deleted?.destroy;
+      await deleted.destroy();
       await this.cacheService.clear();
       return true;
     }
@@ -102,20 +102,29 @@ export class EventsService {
   }
 
   async allowEvent(uid: string): Promise<IEvent> {
-    const [_, [updatedEvent]] = await this.eventModel.update(
+    const [, [updatedEvent]] = await this.eventModel.update(
       { allowed: true },
       {
         where: { eventUid: uid },
         returning: true,
       }
     );
+    const eventDate = new Date(updatedEvent.date);
+    console.log("updatedEvent:", updatedEvent);
 
-    const delay = updatedEvent.date.getTime() - Date.now() + 3 * 60 * 60 * 1000;
+    if (isNaN(eventDate.getTime())) {
+      throw new BadRequestException(`Невалидная дата события`);
+    }
 
-    this.notificationService.addNoticeQueue(updatedEvent.name, delay);
+    const delay = eventDate.getTime() - Date.now() + 3 * 60 * 60 * 1000;
+
+    await this.notificationService.addNoticeQueue(
+      updatedEvent.name,
+      Math.max(0, delay || 0)
+    );
 
     if (!updatedEvent) {
-      throw new Error(`Event with uid=${uid} not found`);
+      throw new NotFoundException(`Event with uid=${uid} not found`);
     }
 
     return updatedEvent;

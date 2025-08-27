@@ -9,17 +9,17 @@ import { QueueModule } from "./modules/queue/queue.module";
 import { NotificationModule } from "./modules/notification/notification.module";
 
 @Module({
-  imports: [
-    ConfigHostModule,
-    DatabaseModule,
-    QueueModule,
-    LocalesModule,
-    CacheModule,
-    EventsModule,
-    AdminModule,
-    NotificationModule,
-  ],
-  controllers: [],
-  providers: [],
+    imports: [
+        ConfigHostModule,
+        DatabaseModule,
+        QueueModule,
+        LocalesModule,
+        CacheModule,
+        EventsModule,
+        AdminModule,
+        NotificationModule,
+    ],
+    controllers: [],
+    providers: [],
 })
 export class AppModule {}
