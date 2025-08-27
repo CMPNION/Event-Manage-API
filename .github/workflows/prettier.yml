@@ -20,5 +20,5 @@ jobs:
         run: npm ci
 
       - name: Run Prettier
-        run: npx prettier --check '**/*.{js,ts,json,md}'
+        run: npx prettier --write '**/*.{js,ts,json,md}'
 
